@@ -16,9 +16,6 @@ app.get('/api/v1/books', (req,res) => {
         .then(data => res.send(data.rows));
 });
 
-// Create a new endpoint at GET /api/v1/books which will retrieve an array of book objects from the database, limited to only the book_id, title, author, and image_url.
-// STRETCH GOAL: Create a new endpoint that will retrieve a single book based on its id.
-
 app.get('/api/v1/:id', (req,res) => {
     client.query('SELECT title, author, "image_url" FROM books WHERE id = $1;', [req.params.id])
         .then(data => res.send(data.rows));

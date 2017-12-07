@@ -11,10 +11,13 @@ const client = new pg.Client(conString);
 client.connect();
 
 
-app.get('/api/v1/cards', (req,res) => {
-    // client.query('SELECT * FROM cards;')
-    //     .then(data => res.send(data.rows)); 
+app.get('/api/v1/books', (req,res) => {
+    client.query('SELECT id, title, author, "image_url" FROM books;')
+        .then(data => res.send(data.rows));
 });
+
+// Create a new endpoint at GET /api/v1/books which will retrieve an array of book objects from the database, limited to only the book_id, title, author, and image_url.
+// STRETCH GOAL: Create a new endpoint that will retrieve a single book based on its id.
 
 app.get('/api/v1/:recipient', (req,res) => {
     // client.query('SELECT * FROM cards WHERE recipient = $1', [:reipient])
@@ -44,7 +47,7 @@ function loadBooks() {
 }
 function loadDB() {
     client.query(`
-    CREATE TABLE IF NOT EXISTS books (id SERIAL PRIMARY KEY, title VARCHAR(50), author VARCHAR(50), isbn VARCHAR(100), image_url VARCHAR(255), description VARCHAR(2500));`
+    CREATE TABLE IF NOT EXISTS books (id SERIAL PRIMARY KEY, title VARCHAR(50), author VARCHAR(50), isbn VARCHAR(100) UNIQUE, image_url VARCHAR(255), description VARCHAR(2500));`
     )
         .then(loadBooks)
         .catch(console.error);

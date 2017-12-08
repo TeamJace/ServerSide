@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "##Build and deploy a backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamJace/ServerSide.git"
+  },
+  "author": "@grace",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeamJace/ServerSide/issues"
+  },
+  "homepage": "https://github.com/TeamJace/ServerSide#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "pg": "^7.4.0"
+  }
+}

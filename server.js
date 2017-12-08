@@ -3,22 +3,23 @@ const express = require('express');
 const app = express();
 const pg = require('pg');
 const fs = require('fs');
-
+const cors = require('cors');
 
 const PORT = process.env.PORT;
 const conString = process.env.DATABASE_URL;
 const client = new pg.Client(conString);
 client.connect();
 
+app.use(cors());
 
 app.get('/api/v1/books', (req,res) => {
     client.query('SELECT id, title, author, "image_url" FROM books;')
-        .then(data => res.send(data.rows));
+        .then(data => res.send(data.rows)).catch(console.error);
 });
 
 app.get('/api/v1/:id', (req,res) => {
     client.query('SELECT title, author, "image_url" FROM books WHERE id = $1;', [req.params.id])
-        .then(data => res.send(data.rows));
+        .then(data => res.send(data.rows)).catch(console.error);
 });
 
 app.get('*', (req,res) => {

@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const pg = require('pg');
 const fs = require('fs');
+const body = require('body-parser');
 const cors = require('cors');
 
 const PORT = process.env.PORT;
@@ -12,6 +13,8 @@ const client = new pg.Client(conString);
 client.connect();
 
 app.use(cors());
+app.use(body.json());
+app.use(body.urlencoded({extended: true}));
 
 app.get('/api/v1/books', (req, res) => {
     client.query('SELECT * FROM books')
@@ -24,8 +27,9 @@ app.get('/api/v1/books/:id', (req, res) => {
 });
 
 app.post('/api/v1/new', (req, res) => {
-    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING', [req.params.title, req.params.author, req.params.isbn, req.params.image_url, req.params.descrption])
+    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5)', [req.body.title, req.body.author, req.body.isbn, req.body.image_url, req.body.descrption])
         .then(console.log)
+        .then(data => res.send(data))
         .catch(console.error);
 });
 

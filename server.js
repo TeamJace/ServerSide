@@ -24,7 +24,7 @@ app.get('/api/v1/books/:id', (req, res) => {
 });
 
 app.post('/api/v1/new', (req, res) => {
-    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING', [req.body.title, req.body.author, req.body.isbn, req.body.image_url, req.body.descrption])
+    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING', [req.params.title, req.params.author, req.params.isbn, req.params.image_url, req.params.descrption])
         .then(console.log)
         .catch(console.error);
 });

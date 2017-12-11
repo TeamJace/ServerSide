@@ -33,6 +33,12 @@ app.post('/api/v1/new', (req, res) => {
         .catch(console.error);
 });
 
+app.put('/api/v1/books/:id', (req, res) => {
+    client.query('UPDATE books SET author=$1, isbn=$2, description=$3, title=$4, image_url=$5;', [req.body.author, req.body.isbn, req.body.description, req.body.title, req.body.image_url])
+        .then(data => res.status(200).send('Book updated'))
+        .catch(console.error);
+});
+
 app.get('*', (req, res) => {
     res.send('ERROR path does not exist');
 });

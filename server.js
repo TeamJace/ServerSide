@@ -5,6 +5,10 @@ const pg = require('pg');
 const fs = require('fs');
 const body = require('body-parser');
 const cors = require('cors');
+const superagent = require('superagent');
+
+const googleUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
+const gAPIKey = process.env.key;
 
 const PORT = process.env.PORT;
 console.log(PORT);
@@ -31,6 +35,24 @@ app.post('/api/v1/new', (req, res) => {
         .then(console.log)
         .then(data => res.send(data))
         .catch(console.error);
+});
+
+app.get('api/v1/books/find', (req, res) => {
+    const query = req.query.find;
+    superagent
+        .get(`${googleUrl}${query}&key=${gAPIKey}`)
+        .end((err, resp) => {
+            const bookReturn = resp.body.items.slice(0,10).map( book => {
+                return {
+                    title: book.volumeInfo.title,
+                    isbn: book.industryIdentifiers[0].identifier,
+                    author: book.volumeInfo.authors[0],
+                    image_url: book.volumeInfo.imageLinks.thumbnail,
+                    description: book.volumeInfo.description
+                };
+            });
+            res.send(bookReturn);
+        });
 });
 
 app.get('*', (req, res) => {

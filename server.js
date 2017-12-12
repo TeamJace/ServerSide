@@ -26,7 +26,7 @@ app.get('/api/v1/books', (req, res) => {
 });
 
 app.get('api/v1/books/search', (req, res) => {
-    const query = req.query.find;
+    const query = req.query.search;
     superagent
         .get(`${googleUrl}${query}&key=${gAPIKey}`)
         .end((err, resp) => {

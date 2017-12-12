@@ -25,7 +25,7 @@ app.get('/api/v1/books', (req, res) => {
         .then(data => res.send(data.rows)).catch(console.error);
 });
 
-app.get('api/v1/books/search', (req, res) => {
+app.get('/api/v1/books/search', (req, res) => {
     const query = req.query.search;
     superagent
         .get(`${googleUrl}${query}&key=${gAPIKey}`)

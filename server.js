@@ -39,6 +39,12 @@ app.put('/api/v1/books/:id', (req, res) => {
         .catch(console.error);
 });
 
+app.delete('/api/v1/books/:id', (req, res) => {
+    client.query(`DELETE FROM books WHERE id=$1`, [req.params.id])
+        .then(() => res.status(200).send('Book deleted'))
+        .catch(console.error);
+});
+
 app.get('*', (req, res) => {
     res.send('ERROR path does not exist');
 });

@@ -37,7 +37,7 @@ app.post('/api/v1/new', (req, res) => {
         .catch(console.error);
 });
 
-app.get('api/v1/books/find', (req, res) => {
+app.get('api/v1/books/search', (req, res) => {
     const query = req.query.find;
     superagent
         .get(`${googleUrl}${query}&key=${gAPIKey}`)
@@ -52,7 +52,8 @@ app.get('api/v1/books/find', (req, res) => {
                 };
             });
             res.send(bookReturn);
-        });
+        })
+        .catch(console.error);
 });
 
 app.get('*', (req, res) => {

@@ -36,7 +36,7 @@ app.get('/api/v1/books/search', (req, res) => {
                     title: book.volumeInfo.title || 'n/a',
                     isbn: (book.industryIdentifiers) ? book.industryIdentifiers[0].identifier : 'n/a',
                     author: (book.volumeInfo.authors) ? book.volumeInfo.authors[0] : 'n/a',
-                    image_url: book.volumeInfo.imageLinks.thumbnail || 'n/a',
+                    image_url: (book.volumeInfo.imageLinks) ? book.volumeInfo.imageLinks.thumbnail : 'n/a',
                     description: book.volumeInfo.description || 'n/a'
                 };
             });

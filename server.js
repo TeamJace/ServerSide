@@ -5,6 +5,11 @@ const pg = require('pg');
 const fs = require('fs');
 const body = require('body-parser');
 const cors = require('cors');
+const superagent = require('superagent');
+
+const googleUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
+const gAPIKey = process.env.g_key;
+console.log(gAPIKey);
 
 const PORT = process.env.PORT;
 console.log(PORT);
@@ -21,6 +26,25 @@ app.get('/api/v1/books', (req, res) => {
         .then(data => res.send(data.rows)).catch(console.error);
 });
 
+app.get('/api/v1/books/search', (req, res) => {
+    const query = req.query.search;
+    superagent
+        .get(`${googleUrl}${query}&key=${gAPIKey}`)
+        .end((err, resp) => {
+            const bookReturn = resp.body.items.slice(0,10).map( book => {
+                return {
+                    title: book.volumeInfo.title || 'n/a',
+                    isbn: (book.volumeInfo.industryIdentifiers) ? book.volumeInfo.industryIdentifiers[0].identifier : 'n/a',
+                    author: (book.volumeInfo.authors) ? book.volumeInfo.authors[0] : 'n/a',
+                    image_url: (book.volumeInfo.imageLinks) ? book.volumeInfo.imageLinks.thumbnail : 'n/a',
+                    description: book.volumeInfo.description || 'n/a'
+                };
+            });
+            res.send(bookReturn);
+        });
+        // .catch(console.error);
+});
+
 app.get('/api/v1/books/:id', (req, res) => {
     client.query('SELECT * FROM books WHERE id = $1', [req.params.id])
         .then(data => res.send(data.rows)).catch(console.error);
@@ -32,6 +56,7 @@ app.post('/api/v1/new', (req, res) => {
         .then(data => res.send(data))
         .catch(console.error);
 });
+
 
 app.put('/api/v1/books/:id', (req, res) => {
     client.query('UPDATE books SET author=$1, isbn=$2, description=$3, title=$4, image_url=$5 WHERE id=$6;', [req.body.author, req.body.isbn, req.body.description, req.body.title, req.body.image_url, req.params.id])

@@ -8,7 +8,8 @@ const cors = require('cors');
 const superagent = require('superagent');
 
 const googleUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
-const gAPIKey = process.env.key;
+const gAPIKey = process.env.g_key;
+console.log(gAPIKey);
 
 const PORT = process.env.PORT;
 console.log(PORT);
@@ -32,11 +33,11 @@ app.get('/api/v1/books/search', (req, res) => {
         .end((err, resp) => {
             const bookReturn = resp.body.items.slice(0,10).map( book => {
                 return {
-                    title: book.volumeInfo.title,
-                    isbn: book.industryIdentifiers[0].identifier,
-                    author: book.volumeInfo.authors[0],
-                    image_url: book.volumeInfo.imageLinks.thumbnail,
-                    description: book.volumeInfo.description
+                    title: book.volumeInfo.title || 'n/a',
+                    isbn: book.industryIdentifiers[0].identifier || 'n/a',
+                    author: book.volumeInfo.authors[0] || 'n/a',
+                    image_url: book.volumeInfo.imageLinks.thumbnail || 'n/a',
+                    description: book.volumeInfo.description || 'n/a'
                 };
             });
             res.send(bookReturn);

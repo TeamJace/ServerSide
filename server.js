@@ -40,8 +40,8 @@ app.get('/books/search', (req, res) => {
                 };
             });
             res.send(bookReturn);
-        })
-        .catch(console.error);
+        });
+        // .catch(console.error);
 });
 
 app.get('/api/v1/books/:id', (req, res) => {

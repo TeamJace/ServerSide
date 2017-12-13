@@ -51,13 +51,24 @@ app.get('/api/v1/books/:id', (req, res) => {
 });
 
 app.post('/api/v1/new', (req, res) => {
-    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5)', [req.body.title, req.body.author, req.body.isbn, req.body.image_url, req.body.descrption])
-        .then(console.log)
+    console.log(req.body);
+    client.query('INSERT INTO books (title, author, isbn, "image_url", description) VALUES ($1, $2, $3, $4, $5)', [req.body.title, req.body.author, req.body.isbn, req.body.image_url, req.body.description])
         .then(data => res.send(data))
         .catch(console.error);
 });
 
 
+app.put('/api/v1/books/:id', (req, res) => {
+    client.query('UPDATE books SET author=$1, isbn=$2, description=$3, title=$4, image_url=$5 WHERE id=$6;', [req.body.author, req.body.isbn, req.body.description, req.body.title, req.body.image_url, req.params.id])
+        .then(() => res.status(200).send('Book updated'))
+        .catch(console.error);
+});
+
+app.delete('/api/v1/books/:id', (req, res) => {
+    client.query(`DELETE FROM books WHERE id=$1`, [req.params.id])
+        .then(() => res.status(204).send('Book deleted'))
+        .catch(console.error);
+});
 
 app.get('*', (req, res) => {
     res.send('ERROR path does not exist');
